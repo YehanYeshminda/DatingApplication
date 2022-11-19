@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,11 +21,13 @@ namespace API.Controllers
         }
 
         [HttpGet] // returns all the users as a paused method which is task
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
 
+        [Authorize] // in order to add authorization to the application
         [HttpGet("{id}")] // returns a user using a id  as a paused method which is task
         public async Task<ActionResult<AppUser>> GetUser(int id)
         {

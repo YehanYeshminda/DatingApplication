@@ -1,5 +1,11 @@
+using System.Text;
 using API.Data;
+using API.Extensions;
+using API.Interfaces;
+using API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace API
@@ -17,19 +23,11 @@ namespace API
         // this is called the dependency injection container
         public void ConfigureServices(IServiceCollection services)
         {
-            // making the reference to the data context
-            services.AddDbContext<DataContext>(options =>
-            {
-                options.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
-            });
-
+            services.AddApplicationServices(_config); // using the services from this file
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
-            });
-
-            services.AddCors();
+            services.AddSwaggerServices(_config);
+            services.AddCors(); // for the cors
+            services.AddIndentityServices(_config);
         }
 
         // This is used to Configure the http pipeline
@@ -48,6 +46,7 @@ namespace API
 
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
 
+            app.UseAuthentication(); // for the jwt
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

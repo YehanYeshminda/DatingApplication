@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,14 +16,16 @@ namespace API.Controllers
     public class AccountController : BaseApiController
     {
         private readonly DataContext _context;
+        private readonly ITokenService _tokenService;
 
-        public AccountController(DataContext context)
+        public AccountController(DataContext context, ITokenService tokenService)
         {
+            _tokenService = tokenService; // in order to use the token service
             _context = context; // in order to use the context we should always initialize
         }
 
         [HttpPost("register")] // this automatically binds to the parameters
-        public async Task<ActionResult<AppUser>> Register(RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             if (await UserExists(registerDto.Username)) return BadRequest("Username is already taken"); // this will be a 400 request 
 
@@ -38,11 +41,16 @@ namespace API.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync(); // saving the users into the data table inside of the database
 
-            return user;
+            // in order to send the information back as a token service
+            return new UserDto
+            {
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user),
+            };
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AppUser>> Login(LoginDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             // we could use firstOrDefault as well
             var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username); // getting the user
@@ -59,7 +67,12 @@ namespace API.Controllers
                 if (computerHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password"); // returns 401 bad request
             }
 
-            return user;
+            // in order to send the information back as a token service
+            return new UserDto
+            {
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user),
+            };
         }
 
 
