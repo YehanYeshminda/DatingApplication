@@ -14,6 +14,7 @@ export class AccountService {
 
   constructor(private http: HttpClient) {}
 
+  // in order to login the user
   login(model: any) {
     return this.http.post(this.baseUrl + 'account/login', model).pipe(
       map((res: User) => {
@@ -26,6 +27,20 @@ export class AccountService {
         }
       })
     );
+  }
+
+  register(model:any){
+    return this.http.post(this.baseUrl + "account/register", model).pipe(
+      // the below is used to set the user in the localstorage
+      map((user:User) => {
+        if (user){
+          localStorage.setItem("user", JSON.stringify(user));
+          this.currentUserSource.next(user);
+        }
+
+        // return user;         // we could return user from the register if we wanted to
+      })
+    )
   }
 
   // method used to set the current user
