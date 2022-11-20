@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -20,8 +16,8 @@ namespace API.Controllers
             _context = context;
         }
 
-        [HttpGet] // returns all the users as a paused method which is task
         [AllowAnonymous]
+        [HttpGet] // returns all the users as a paused method which is task
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
             return await _context.Users.ToListAsync();

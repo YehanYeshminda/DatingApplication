@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">Dating Application</a>
+    <ul class="navbar-nav mr-auto" *ngIf="accountService.currentUser$ | async">
+      <li class="nav-item">
+        <a class="nav-link" href="#">Matches</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Lists</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Messages</a>
+      </li>
+    </ul>
+
+    <!-- making the drop down for the toggle -->
+    <div class="dropdown" *ngIf="accountService.currentUser$ | async" dropdown>
+      <a class="dropdown-toggle text-light" dropdownToggle>Welcome User</a>
+      <div class="dropdown-menu mt-3" *dropdownMenu>
+        <a class="dropdown-item">Edit Profile</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" (click)="logout()">Logout</a>
+      </div>
+    </div>
+
+    <!-- 1. converting the form into a angular form and showing only if the user is not logged in -->
+    <!-- 2. by making the accout service private we are then able to use the current user of that service directly inside of the HTML template -->
+    <form
+      *ngIf="(accountService.currentUser$ | async) === null"
+      class="form-inline mt-2 mt-md-0"
+      #loginForm="ngForm"
+      (ngSubmit)="login()"
+      autocomplete="off"
+    >
+      <input
+        class="form-control mr-sm-2"
+        type="text"
+        placeholder="username"
+        name="username"
+        [(ngModel)]="model.Username"
+      />
+      <!-- this is used to get the form data -->
+      <input
+        class="form-control mr-sm-2"
+        type="password"
+        placeholder="password"
+        name="password"
+        [(ngModel)]="model.Password"
+      />
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Login
+      </button>
+    </form>
+  </div>
+</nav>

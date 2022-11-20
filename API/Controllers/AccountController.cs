@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
 using API.Entities;
@@ -75,9 +71,8 @@ namespace API.Controllers
             };
         }
 
-
-
         // checking if the user name is already existinng inside of the database
+        [HttpGet]
         public async Task<bool> UserExists(string username)
         {
             return await _context.Users.AnyAsync(x => x.UserName == username.ToLower()); // checking if any username matches the username passed
