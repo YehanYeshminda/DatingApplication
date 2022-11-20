@@ -6,11 +6,15 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
+import { NotFoundComponent } from './errors/not-found/not-found.component';
+import { ServerErrorComponent } from './errors/server-error/server-error.component';
 
 // in order to enable routing inside of the angular application
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'members', component: MemberListComponent, canActivate: [AuthGuard] }, // apply one route guard
+  { path: 'errors', component: TestErrorsComponent },
   {
     path: '',
     runGuardsAndResolvers: 'always',
@@ -20,9 +24,11 @@ const routes: Routes = [
       { path: 'members/:id', component: MemberDetailComponent },
       { path: 'lists', component: ListsComponent },
       { path: 'messages', component: MessagesComponent },
-      { path: '**', component: HomeComponent },
     ],
   },
+  { path: 'not-found', component: NotFoundComponent },
+  { path: 'server-error', component: ServerErrorComponent },
+  { path: '**', component: NotFoundComponent, pathMatch: 'full' },
 ];
 
 @NgModule({
