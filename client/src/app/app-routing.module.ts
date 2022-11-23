@@ -15,13 +15,13 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'members', component: MemberListComponent, canActivate: [AuthGuard] }, // apply one route guard
   { path: 'errors', component: TestErrorsComponent },
+  { path: 'members/:username', component: MemberDetailComponent },
   {
     path: '',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
     children: [
       // in order to apply 1 route guard to many paths
-      { path: 'members/:id', component: MemberDetailComponent },
       { path: 'lists', component: ListsComponent },
       { path: 'messages', component: MessagesComponent },
     ],
