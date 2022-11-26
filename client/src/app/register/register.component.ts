@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
         this.cancel(); // in order to hide the register
       },
       error: (err) => {
-        this.toastr.error(err.error) // using the toastr services
+        // this.toastr.error(err.error) // using the toastr services
         console.log(err)
       },
     });
