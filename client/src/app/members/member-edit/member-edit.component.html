@@ -3,7 +3,6 @@
     <h1>Your Information</h1>
   </div>
   <div class="col-8">
-
     <!-- if something in the form has been typed -->
     <div class="alert alert-info" *ngIf="editForm.dirty">
       <p>
@@ -39,9 +38,15 @@
       </div>
 
       <div class="card-footer">
-
         <!-- the edit form is given because the button is not inside of the form -->
-        <button class="btn btn-success col-12" type="submit" form="editForm" [disabled]="!editForm.dirty">Save changes</button>
+        <button
+          class="btn btn-success col-12"
+          type="submit"
+          form="editForm"
+          [disabled]="!editForm.dirty"
+        >
+          Save changes
+        </button>
       </div>
     </div>
   </div>

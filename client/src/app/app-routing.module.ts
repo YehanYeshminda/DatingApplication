@@ -1,3 +1,4 @@
+import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { NgModule } from '@angular/core';
@@ -23,7 +24,7 @@ const routes: Routes = [
     children: [
       // in order to apply 1 route guard to many paths
       { path: 'members/:username', component: MemberDetailComponent },
-      { path: 'member/:edit', component: MemberEditComponent },
+      { path: 'member/:edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangesGuard] },
       { path: 'lists', component: ListsComponent },
       { path: 'messages', component: MessagesComponent },
     ],

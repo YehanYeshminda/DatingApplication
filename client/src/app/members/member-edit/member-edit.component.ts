@@ -4,7 +4,7 @@ import { MembersService } from './../../_services/members.service';
 import { AccountService } from './../../_services/account.service';
 import { User } from './../../_models/User';
 import { Member } from 'src/app/_models/Member';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -17,6 +17,15 @@ export class MemberEditComponent implements OnInit {
   user: User | null = null; // contains username and token
   @ViewChild('editForm') editForm: NgForm | undefined;
 
+  // promting the user if the user tries to leave without saving
+  @HostListener('window:beforeunload', ['$event']) unloadNotification(
+    // used to get the events from the browser
+    $event: any
+  ) {
+    if (this.editForm?.dirty) {
+      $event.returnValue = true;
+    }
+  }
   constructor(
     private accountService: AccountService,
     private memberService: MembersService,
@@ -33,15 +42,17 @@ export class MemberEditComponent implements OnInit {
 
   loadMember() {
     if (!this.user) return;
-
     this.memberService.getMember(this.user.username).subscribe({
       next: (member) => (this.member = member),
     });
   }
 
-  updateMember(){
-    console.log(this.member)
-    this.toastrService.success("Porfile has been edited successylly", "Update Successful!")
+  updateMember() {
+    console.log(this.member);
+    this.toastrService.success(
+      'Porfile has been edited successylly',
+      'Update Successful!'
+    );
     this.editForm?.reset(this.member); // this is used to rest and remove the dirty from the html
   }
 }
