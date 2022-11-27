@@ -25,6 +25,9 @@ import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import {NgxGalleryModule} from "@kolkov/ngx-gallery";
+import {NgxSpinnerModule} from "ngx-spinner";
+import {LoadingInterceptor} from "./_interceptors/loading.interceptor";
 
 @NgModule({
   declarations: [
@@ -48,11 +51,14 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
-    SharedModule, // comes from the shared module
+    SharedModule,
+    NgxGalleryModule,
+    // comes from the shared module
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }, // we make it true because we add it not replace the ones which is given
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, // in order to use the JWT token interceptor to send a reques of the token in every request
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }, // In order to add the loading inside of the application
   ],
   bootstrap: [AppComponent],
 })
