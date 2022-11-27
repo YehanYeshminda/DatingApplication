@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { MembersService } from './../../_services/members.service';
 import { Component, OnInit } from '@angular/core';
 import { Member } from 'src/app/_models/Member';
@@ -8,20 +9,11 @@ import { Member } from 'src/app/_models/Member';
   styleUrls: ['./member-list.component.css'],
 })
 export class MemberListComponent implements OnInit {
-  members: Member[];
+  members$:Observable<Member[]> | undefined;
 
   constructor(private memberService: MembersService) {}
 
-  // we do not do error handling because we have done inside of the interceptor
-  loadMembers() {
-    this.memberService.getMembers().subscribe({
-      next: (members) => {
-        this.members = members;
-      },
-    });
-  }
-
   ngOnInit(): void {
-    this.loadMembers();
+    this.members$ = this.memberService.getMembers();
   }
 }
