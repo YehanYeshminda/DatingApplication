@@ -10,7 +10,11 @@
       >
         Main
       </button>
-      <button class="btn-sm bg-danger btn-outline-light">
+      <button
+        class="btn-sm bg-danger btn-outline-light"
+        [disabled]="photo.isMain"
+        (click)="deletePhoto(photo.id)"
+      >
         <i class="fa fa-trash text-white"></i>
       </button>
     </div>
