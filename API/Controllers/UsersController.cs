@@ -77,8 +77,14 @@ namespace API.Controllers
             if(user.Photos.Count == 0) photo.IsMain = true;
 
             user.Photos.Add(photo);
-                                                                        // map from the photodto to the photo
-            if (await _userRepository.SaveAllAsync()) return _mapper.Map<PhotoDto>(photo);
+
+            if (await _userRepository.SaveAllAsync()) 
+            {
+                // map from the photodto to the photo
+                return CreatedAtAction(nameof(GetUserByUsername),
+                                       new { username = user.UserName },
+                                       _mapper.Map<PhotoDto>(photo)); // returns with the saved location
+            };
 
             return BadRequest("Problem adding photo");
 
