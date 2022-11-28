@@ -59,13 +59,13 @@ namespace API.Controllers
         public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
         {
             var username = User.GetUsername();
-            var user = await  _userRepository.GetUserByUsernameAsync(username);
+            var user = await _userRepository.GetUserByUsernameAsync(username);
 
             if (user == null) return NotFound();
 
             var result = await _photoService.AddPhotoAsync(file);
 
-            if(result.Error != null) return BadRequest(result.Error.Message); // if a error occurs
+            if (result.Error != null) return BadRequest(result.Error.Message); // if a error occurs
 
             var photo = new Photo
             {
@@ -74,11 +74,11 @@ namespace API.Controllers
             };
 
             // if the first photo being uploaded we set it to main
-            if(user.Photos.Count == 0) photo.IsMain = true;
+            if (user.Photos.Count == 0) photo.IsMain = true;
 
             user.Photos.Add(photo);
 
-            if (await _userRepository.SaveAllAsync()) 
+            if (await _userRepository.SaveAllAsync())
             {
                 // map from the photodto to the photo
                 return CreatedAtAction(nameof(GetUserByUsername),
@@ -88,6 +88,31 @@ namespace API.Controllers
 
             return BadRequest("Problem adding photo");
 
+        }
+
+        [HttpPut("set-main-photo/{photoId}")]
+        public async Task<ActionResult> SetMainPhoto(int photoId)
+        {
+            var username = User.GetUsername();
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+
+            if (user == null) return NotFound();
+
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId); // getting the photo from the photo id
+
+            if (photo == null) return NotFound();
+
+            if (photo.IsMain) return BadRequest("Photo is already the main photo");
+
+            var currentMainPhoto = user.Photos.FirstOrDefault(x => x.IsMain);
+
+            if (currentMainPhoto != null) currentMainPhoto.IsMain = false;          // which means we already have a photo which is set to null or to true
+
+            photo.IsMain = true; // the current which we choose to true
+
+            if (await _userRepository.SaveAllAsync()) return NoContent();
+
+            return BadRequest("Problem setting main photo!");
         }
     }
 }
