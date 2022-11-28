@@ -1,12 +1,11 @@
 using System.Security.Claims;
-using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace API.Controllers
@@ -16,10 +15,12 @@ namespace API.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IPhotoService _photoService;
 
         // then we intialize the data context
-        public UsersController(IUserRepository userRepository, IMapper mapper)
+        public UsersController(IUserRepository userRepository, IMapper mapper, IPhotoService photoService)
         {
+            _photoService = photoService;
             _mapper = mapper;
             _userRepository = userRepository;
         }
@@ -39,8 +40,7 @@ namespace API.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
         {
-            // this is gotten from the identity of the user
-            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // make sure to debug and check this
+            var username = User.GetUsername(); // make sure to debug and check this
 
             var user = await _userRepository.GetUserByUsernameAsync(username);
 
@@ -53,6 +53,35 @@ namespace API.Controllers
 
             // if there were changes to be saved
             return BadRequest("Failed to update user");
+        }
+
+        [HttpPost("add-photo")]
+        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
+        {
+            var username = User.GetUsername();
+            var user = await  _userRepository.GetUserByUsernameAsync(username);
+
+            if (user == null) return NotFound();
+
+            var result = await _photoService.AddPhotoAsync(file);
+
+            if(result.Error != null) return BadRequest(result.Error.Message); // if a error occurs
+
+            var photo = new Photo
+            {
+                Url = result.SecureUrl.AbsoluteUri,
+                PublicId = result.PublicId
+            };
+
+            // if the first photo being uploaded we set it to main
+            if(user.Photos.Count == 0) photo.IsMain = true;
+
+            user.Photos.Add(photo);
+                                                                        // map from the photodto to the photo
+            if (await _userRepository.SaveAllAsync()) return _mapper.Map<PhotoDto>(photo);
+
+            return BadRequest("Problem adding photo");
+
         }
     }
 }
