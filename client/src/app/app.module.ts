@@ -10,7 +10,6 @@ import { NavComponent } from './nav/nav.component';
 import { FormsModule } from '@angular/forms';
 
 // imports used for angular
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
@@ -26,8 +25,8 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import {NgxGalleryModule} from "@kolkov/ngx-gallery";
-import {NgxSpinnerModule} from "ngx-spinner";
 import {LoadingInterceptor} from "./_interceptors/loading.interceptor";
+import { EditPhotoComponent } from './members/edit-photo/edit-photo.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +43,7 @@ import {LoadingInterceptor} from "./_interceptors/loading.interceptor";
     ServerErrorComponent,
     MemberCardComponent,
     MemberEditComponent,
+    EditPhotoComponent,
   ],
   imports: [
     BrowserModule,

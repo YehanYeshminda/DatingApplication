@@ -4,6 +4,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxSpinnerModule } from "ngx-spinner";
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import { FileUploadModule } from 'ng2-file-upload';
 
 // ng g m shared --flat
 
@@ -17,12 +18,14 @@ import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
     }),
     TabsModule.forRoot(),
     NgxSpinnerModule,
+    FileUploadModule,
   ],
   exports : [
     BsDropdownModule,
     ToastrModule,
     TabsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    FileUploadModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
