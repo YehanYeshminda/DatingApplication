@@ -24,9 +24,7 @@ export class AccountService {
 
         // if we have a user
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user);
-
+          this.setCurrentUser(user);
         }
       })
     );
@@ -37,8 +35,7 @@ export class AccountService {
       // the below is used to set the user in the localstorage
       map((user:User) => {
         if (user){
-          localStorage.setItem("user", JSON.stringify(user));
-          this.currentUserSource.next(user);
+          this.setCurrentUser(user);
         }
 
         // return user;         // we could return user from the register if we wanted to
@@ -48,6 +45,7 @@ export class AccountService {
 
   // method used to set the current user
   setCurrentUser(user: User){
+    localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
   }
 

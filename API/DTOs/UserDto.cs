@@ -10,5 +10,6 @@ namespace API.DTOs
         // when a user logs or registers
         public string Username { get; set; }
         public string Token { get; set; }
+        public string photoUrl { get; set; }
     }
 }
