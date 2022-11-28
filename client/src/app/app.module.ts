@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavComponent } from './nav/nav.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // imports used for angular
 import { HomeComponent } from './home/home.component';
@@ -53,6 +53,7 @@ import { EditPhotoComponent } from './members/edit-photo/edit-photo.component';
     FormsModule,
     SharedModule,
     NgxGalleryModule,
+    ReactiveFormsModule
     // comes from the shared module
   ],
   providers: [
