@@ -1,75 +1,72 @@
 <form [formGroup]="registerForm" (ngSubmit)="register()" autocomplete="off">
   <h2 class="text-center text-primary">Sign Up</h2>
   <hr />
-  <div class="form-group">
+  <div class="mb-3">
     <!-- uses the name property to track whats being entered into the form -->
-    <input
-      type="text"
-      class="form-control"
-      formControlName="username"
-      placeholder="Username"
-      [class.is-invalid]="registerForm.get('username')?.errors && registerForm.get('username')?.touched"
-    />
-
-    <div class="invalid-feedback">
-      Please enter a username
+    <div class="mb-3">
+      <label>I am a:</label>
+      <label class="form-check-label ms-4">
+        <input
+          type="radio"
+          class="form-check-input"
+          value="male"
+          formControlName="gender"
+        />
+        Male
+      </label>
+      <label class="form-check-label ms-4">
+        <input
+          type="radio"
+          style="margin-right: 30px;"
+          class="form-check-input"
+          value="female"
+          formControlName="gender"
+        />
+        female
+      </label>
     </div>
-  </div>
+    <app-text-input
+      [formControl]="$any(registerForm.controls['username'])"
+      [label]="'username'"
+    ></app-text-input>
+    <app-text-input
+      [formControl]="$any(registerForm.controls['knownAs'])"
+      [label]="'known as?'"
+    ></app-text-input>
 
-  <div class="form-group">
-    <!-- uses the name property to track whats being entered into the form -->
-    <input
-      type="password"
-      class="form-control"
-      formControlName="password"
-      placeholder="Password"
-      [class.is-invalid]="registerForm.get('password')?.errors && registerForm.get('password')?.touched"
-    />
+    <!-- only if the user is 18 years old -->
+    <app-date-picker
+      [formControl]="$any(registerForm.controls['dateOfBirth'])"
+      [label]="'dob'" [maxDate]="maxDate"
+    ></app-date-picker>
+    <app-text-input
+      [formControl]="$any(registerForm.controls['city'])"
+      [label]="'city'"
+    ></app-text-input>
+    <app-text-input
+      [formControl]="$any(registerForm.controls['country'])"
+      [label]="'country'"
+    ></app-text-input>
+    <app-text-input
+      [formControl]="$any(registerForm.controls['password'])"
+      [label]="'password'"
+      [type]="'password'"
+    ></app-text-input>
+    <app-text-input
+      [formControl]="$any(registerForm.controls['confirmPassword'])"
+      [label]="'confirmPassword'"
+      [label]="'Confirm Password'"
+      [type]="'password'"
+    ></app-text-input>
 
-    <div
-     class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('required')">
-      Please enter a password
+    <div class="form-group text-center">
+      <button class="btn btn-success mr-2" type="submit">Register</button>
+      <button class="btn btn-info mr-2" type="button" (click)="cancel()">
+        Cancel
+      </button>
     </div>
-
-    <div
-     class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('minlength')">
-      The password must be atleast 4 characters
-    </div>
-
-    <div
-     class="invalid-feedback" *ngIf="registerForm.get('password')?.hasError('maxlength')">
-      Password must be maximum 8 characters
-    </div>
-  </div>
-
-  <div class="form-group">
-    <!-- uses the name property to track whats being entered into the form -->
-    <input
-      type="password"
-      class="form-control"
-      formControlName="confirmPassword"
-      placeholder="Confirm Password"
-      [class.is-invalid]="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched"
-    />
-
-    <div
-     class="invalid-feedback" *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
-      Confirm password is required
-    </div>
-
-    <div
-     class="invalid-feedback" *ngIf="registerForm.get('confirmPassword')?.hasError('notMatching')">
-      Not matching passwords
-    </div>
-  </div>
-
-  <div class="form-group text-center">
-    <button class="btn btn-success mr-2" type="submit">Register</button>
-    <button class="btn btn-info mr-2" type="button" (click)="cancel()">
-      Cancel
-    </button>
   </div>
 </form>
 
-<p>form value {{registerForm.value | json}}</p>
-<p>form value {{registerForm.status | json}}</p>
+<!-- <p>form value {{ registerForm.value | json }}</p>
+<p>form value {{ registerForm.status | json }}</p> -->

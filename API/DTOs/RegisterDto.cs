@@ -13,6 +13,21 @@ namespace API.DTOs
         [Required] // adding validations into the system
         [MaxLength(10)]
         public string Username { get; set; }
+        
+        [Required] 
+        public string KnownAs { get; set; }
+        
+        [Required] 
+        public string Gender { get; set; }
+        
+        [Required] 
+        public DateTime? DateOfBirth { get; set; } // optional to make required work
+        
+        [Required] 
+        public string City { get; set; }
+        
+        [Required] 
+        public string Country { get; set; }
 
         [Required]
         [StringLength(8, MinimumLength = 4)] // maximum 8 ,minimum of 4

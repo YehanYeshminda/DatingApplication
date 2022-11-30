@@ -4,6 +4,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +14,11 @@ namespace API.Controllers
     {
         private readonly DataContext _context;
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public AccountController(DataContext context, ITokenService tokenService)
+        public AccountController(DataContext context, ITokenService tokenService, IMapper mapper)
         {
+            _mapper = mapper; // in order to use the auto mapper
             _tokenService = tokenService; // in order to use the token service
             _context = context; // in order to use the context we should always initialize
         }
@@ -25,14 +28,13 @@ namespace API.Controllers
         {
             if (await UserExists(registerDto.Username)) return BadRequest("Username is already taken"); // this will be a 400 request 
 
+
+            var user = _mapper.Map<AppUser>(registerDto);
             using var hmac = new HMACSHA512(); // provides with the hashing algorithm and will be disposed of correctly
 
-            var user = new AppUser
-            {
-                UserName = registerDto.Username.ToLower(),
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)), // used in order to pass the password as a byte array
-                PasswordSalt = hmac.Key,
-            };
+            user.UserName = registerDto.Username.ToLower();
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)); // used in order to pass the password as a byte array
+            user.PasswordSalt = hmac.Key;
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync(); // saving the users into the data table inside of the database
@@ -42,7 +44,7 @@ namespace API.Controllers
             {
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
-                photoUrl = user.Photos.FirstOrDefault(x => x.IsMain).Url,
+                KnownAs = user.KnownAs,
             };
         }
 
@@ -71,6 +73,7 @@ namespace API.Controllers
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
                 photoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
+                KnownAs = user.KnownAs,
             };
         }
 

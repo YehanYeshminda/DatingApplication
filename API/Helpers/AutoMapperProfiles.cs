@@ -19,9 +19,10 @@ namespace API.Helpers
               opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain).Url))
             .ForMember(dest => dest.Age, opt => 
               opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
-           
+
           CreateMap<Photo, PhotoDto>();
           CreateMap<MemberUpdateDto, AppUser>(); // mapping the member dto to the appuser properties
+          CreateMap<RegisterDto, AppUser>(); // mapping the register dto to the app user
         }
 
 

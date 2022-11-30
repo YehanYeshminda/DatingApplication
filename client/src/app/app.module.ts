@@ -27,6 +27,8 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
 import {NgxGalleryModule} from "@kolkov/ngx-gallery";
 import {LoadingInterceptor} from "./_interceptors/loading.interceptor";
 import { EditPhotoComponent } from './members/edit-photo/edit-photo.component';
+import { TextInputComponent } from './_forms/text-input/text-input.component';
+import { DatePickerComponent } from './_forms/date-picker/date-picker.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,8 @@ import { EditPhotoComponent } from './members/edit-photo/edit-photo.component';
     MemberCardComponent,
     MemberEditComponent,
     EditPhotoComponent,
+    TextInputComponent,
+    DatePickerComponent,
   ],
   imports: [
     BrowserModule,
