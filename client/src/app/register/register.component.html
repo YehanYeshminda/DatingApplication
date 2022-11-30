@@ -1,4 +1,5 @@
-<form [formGroup]="registerForm" (ngSubmit)="register()" autocomplete="off">
+<!-- if the register form is not valid the ngSubmit will not work -->
+<form [formGroup]="registerForm" (ngSubmit)="registerForm.valid && register()" autocomplete="off">
   <h2 class="text-center text-primary">Sign Up</h2>
   <hr />
   <div class="mb-3">
@@ -17,7 +18,7 @@
       <label class="form-check-label ms-4">
         <input
           type="radio"
-          style="margin-right: 30px;"
+          style="margin-right: 30px"
           class="form-check-input"
           value="female"
           formControlName="gender"
@@ -25,6 +26,7 @@
         female
       </label>
     </div>
+
     <app-text-input
       [formControl]="$any(registerForm.controls['username'])"
       [label]="'username'"
@@ -37,21 +39,26 @@
     <!-- only if the user is 18 years old -->
     <app-date-picker
       [formControl]="$any(registerForm.controls['dateOfBirth'])"
-      [label]="'dob'" [maxDate]="maxDate"
+      [label]="'dob'"
+      [maxDate]="maxDate"
     ></app-date-picker>
+
     <app-text-input
       [formControl]="$any(registerForm.controls['city'])"
       [label]="'city'"
     ></app-text-input>
+
     <app-text-input
       [formControl]="$any(registerForm.controls['country'])"
       [label]="'country'"
     ></app-text-input>
+
     <app-text-input
       [formControl]="$any(registerForm.controls['password'])"
       [label]="'password'"
       [type]="'password'"
     ></app-text-input>
+
     <app-text-input
       [formControl]="$any(registerForm.controls['confirmPassword'])"
       [label]="'confirmPassword'"
@@ -59,12 +66,22 @@
       [type]="'password'"
     ></app-text-input>
 
+    <!-- used to show the errors inside of the array -->
+    <div class="row" *ngIf="validationErrors">
+      <ul class="text-danger">
+        <li *ngFor="let error of validationErrors">
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+
     <div class="form-group text-center">
-      <button class="btn btn-success mr-2" type="submit">Register</button>
+      <button class="btn btn-success mr-2" type="submit" [disabled]="!registerForm.valid">Register</button>
       <button class="btn btn-info mr-2" type="button" (click)="cancel()">
         Cancel
       </button>
     </div>
+
   </div>
 </form>
 
