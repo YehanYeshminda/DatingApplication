@@ -1,3 +1,4 @@
+import { Pagination } from './../../_models/Pagination';
 import { Observable } from 'rxjs';
 import { MembersService } from './../../_services/members.service';
 import { Component, OnInit } from '@angular/core';
@@ -9,11 +10,27 @@ import { Member } from 'src/app/_models/Member';
   styleUrls: ['./member-list.component.css'],
 })
 export class MemberListComponent implements OnInit {
-  members$:Observable<Member[]> | undefined;
+  // members$:Observable<Member[]> | undefined;
+  members: Member[] = [];
+  pagination: Pagination | undefined;
+  pageNumber = 1;
+  pageSize = 6;
 
   constructor(private memberService: MembersService) {}
 
   ngOnInit(): void {
-    this.members$ = this.memberService.getMembers();
+    // this.members$ = this.memberService.getMembers();
+    this.loadMembers();
+  }
+
+  loadMembers() {
+    this.memberService.getMembers(this.pageNumber, this.pageSize).subscribe({
+      next: res => {
+        if (res.result && res.pagination) {
+          this.members = res.result;
+          this.pagination = res.pagination;
+        }
+      }
+    })
   }
 }
