@@ -42,6 +42,11 @@ namespace API.Data
 
             query = query.Where(u => u.UserName != userParams.CurrentUsername); // will remove the currently logged in user from the result
             query = query.Where(u => u.Gender == userParams.Gender); // getting the opposite gender
+            query = userParams.OrderBy switch
+            {
+                "created" => query.OrderByDescending(u => u.Created), // this is the custom order
+                _ => query.OrderByDescending(u => u.LastActive) // this is the default case
+            };
 
             // query = query.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
 
