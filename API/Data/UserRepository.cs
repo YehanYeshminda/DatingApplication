@@ -43,6 +43,8 @@ namespace API.Data
             query = query.Where(u => u.UserName != userParams.CurrentUsername); // will remove the currently logged in user from the result
             query = query.Where(u => u.Gender == userParams.Gender); // getting the opposite gender
 
+            // query = query.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
+
             return await PagedList<MemberDto>.CreateAsync(query.AsNoTracking().ProjectTo<MemberDto>(_mapper.ConfigurationProvider),
                                                           userParams.PageNumber,
                                                           userParams.PageSize);

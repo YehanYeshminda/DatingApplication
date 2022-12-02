@@ -35,7 +35,7 @@ namespace API.Controllers
             user.UserName = registerDto.Username.ToLower();
             user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)); // used in order to pass the password as a byte array
             user.PasswordSalt = hmac.Key;
-
+    
             _context.Users.Add(user);
             await _context.SaveChangesAsync(); // saving the users into the data table inside of the database
 
@@ -45,6 +45,7 @@ namespace API.Controllers
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,
+                Gender = user.Gender,
             };
         }
 
@@ -74,6 +75,7 @@ namespace API.Controllers
                 Token = _tokenService.CreateToken(user),
                 photoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
                 KnownAs = user.KnownAs,
+                Gender = user.Gender,
             };
         }
 

@@ -1,8 +1,11 @@
-import { Pagination, PaginatedResults } from './../../_models/Pagination';
-import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { AccountService } from './../../_services/account.service';
+import { UserParams } from './../../_models/UserParams';
+import { Pagination } from './../../_models/Pagination';
 import { MembersService } from './../../_services/members.service';
 import { Component, OnInit } from '@angular/core';
 import { Member } from 'src/app/_models/Member';
+import { User } from 'src/app/_models/User';
 
 @Component({
   selector: 'app-member-list',
@@ -10,13 +13,24 @@ import { Member } from 'src/app/_models/Member';
   styleUrls: ['./member-list.component.css'],
 })
 export class MemberListComponent implements OnInit {
-  // members$:Observable<Member[]> | undefined;
   members: Member[] = [];
   pagination: Pagination | undefined;
-  pageNumber = 1;
-  pageSize = 5;
+  userParams: UserParams | undefined;
+  user: User | undefined;
 
-  constructor(private memberService: MembersService) {}
+  constructor(
+    private memberService: MembersService,
+    private accountService: AccountService
+  ) {
+    this.accountService.currentUser$.pipe(take(1)).subscribe({
+      next: (user) => {
+        if (user) {
+          this.userParams = new UserParams(user);
+          this.user = user;
+        }
+      },
+    });
+  }
 
   ngOnInit(): void {
     // this.members$ = this.memberService.getMembers();
@@ -24,19 +38,20 @@ export class MemberListComponent implements OnInit {
   }
 
   loadMembers() {
-    this.memberService.getMembers(this.pageNumber, this.pageSize).subscribe({
-      next: res => {
+    if (!this.userParams) return;
+    this.memberService.getMembers(this.userParams).subscribe({
+      next: (res) => {
         if (res.result && res.pagination) {
           this.members = res.result;
           this.pagination = res.pagination;
         }
-      }
-    })
+      },
+    });
   }
 
-  pageChanged(event:any){
-    if(this.pageNumber !== event.page){
-      this.pageNumber = event.page;
+  pageChanged(event: any) {
+    if (this.userParams && this.userParams.pageNumber !== event.page) {
+      this.userParams.pageNumber = event.page;
       this.loadMembers();
     }
   }

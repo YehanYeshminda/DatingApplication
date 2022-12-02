@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace API.DTOs
 {
@@ -20,13 +16,13 @@ namespace API.DTOs
         [Required] 
         public string Gender { get; set; }
         
-        [Required] 
-        public DateTime? DateOfBirth { get; set; } // optional to make required work
+        [Required]
+        public DateTime DateOfBirth { get; set; } // optional to make required work
         
         [Required] 
         public string City { get; set; }
         
-        [Required] 
+        [Required]
         public string Country { get; set; }
 
         [Required]
