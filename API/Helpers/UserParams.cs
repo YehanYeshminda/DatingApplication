@@ -12,6 +12,7 @@ namespace API.Helpers
             // if value is greater than the max page size then we return 50
             set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
         }
-           
+        public string CurrentUsername { get; set; }   
+        public string Gender { get; set; }   
     }
 }
