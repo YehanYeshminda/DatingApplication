@@ -32,9 +32,17 @@
     </ul>
 
     <!-- making the drop down for the toggle -->
-    <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
-      <img src="{{user.photoUrl || './assets/user.png'}}" alt="user photo" >
-      <a class="dropdown-toggle text-light text-decoration-none ms-lg-3" dropdownToggle>Welcome {{ user.username| titlecase }}</a>
+    <div
+      class="dropdown"
+      *ngIf="accountService.currentUser$ | async as user"
+      dropdown
+    >
+      <img src="{{ user.photoUrl || './assets/user.png' }}" alt="user photo" />
+      <a
+        class="dropdown-toggle text-light text-decoration-none ms-lg-3"
+        dropdownToggle
+        >Welcome {{ user.username | titlecase }}</a
+      >
       <div class="dropdown-menu mt-3" *dropdownMenu>
         <a class="dropdown-item" routerLink="/member/edit">Edit Profile</a>
         <div class="dropdown-divider"></div>
@@ -66,7 +74,10 @@
         name="password"
         [(ngModel)]="model.Password"
       />
-      <button class="btn btn-outline-success btn-secondary my-2 my-sm-0" type="submit">
+      <button
+        class="btn btn-outline-success btn-secondary my-2 my-sm-0"
+        type="submit"
+      >
         Login
       </button>
     </form>

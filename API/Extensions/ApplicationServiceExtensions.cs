@@ -14,7 +14,7 @@ namespace API.Extensions
             services.AddScoped<ITokenService, TokenService>(); // for the token service
             services.AddScoped<IPhotoService, PhotoService>(); // image upload service
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly); // used for the automapper to and find the profiles
-
+            services.AddScoped<LogUserActivity>();
             // making the reference to the data context
             services.AddDbContext<DataContext>(options =>
             {
