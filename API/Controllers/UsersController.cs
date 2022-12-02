@@ -2,6 +2,7 @@ using System.Security.Claims;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -26,10 +27,23 @@ namespace API.Controllers
         }
 
         [HttpGet] // returns all the users as a paused method which is task
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers() // the dto is used to define the data which is needed to be returned
+        public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
         {
-            return Ok(await _userRepository.GetMembersAsync());
+            var users = await _userRepository.GetMembersAsync(userParams);
+
+            Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage,
+                                                              users.PageSize,
+                                                              users.TotalCount,
+                                                              users.TotalPages));
+            return Ok(users);
         }
+
+        // if we return users without pagination
+        // [HttpGet] // returns all the users as a paused method which is task
+        // public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers() // the dto is used to define the data which is needed to be returned
+        // {
+        //     return Ok(await _userRepository.GetMembersAsync());
+        // }
 
         [HttpGet("{username}")] // returns a user using a id  as a paused method which is task
         public async Task<ActionResult<MemberDto>> GetUserByUsername(string username)
