@@ -5,6 +5,7 @@ export class UserParams {
   maxAge = 99;
   pageNumber = 1;
   pageSize = 4;
+  orderBy = 'lastActive'
 
   // if a female then return male
   constructor(user: User){

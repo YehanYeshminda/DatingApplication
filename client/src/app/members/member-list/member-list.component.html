@@ -49,6 +49,30 @@
     <button class="btn btn-info ms-1" type="submit" (click)="resetFilters()">
       Reset Filters
     </button>
+
+    <div class="col">
+      <div class="btn-group float-end d-flex gap-3">
+
+        <!-- btn radio will set the value inside of the order by into the params into that value -->
+        <button
+          class="btn btn-primary"
+          type="button"
+          name="orderBy"
+          (click)="loadMembers()"
+          [(ngModel)]="userParams.orderBy"
+          btnRadio="lastActive"
+        >Last Active</button>
+
+        <button
+          class="btn btn-primary"
+          type="button"
+          name="orderBy"
+          (click)="loadMembers()"
+          [(ngModel)]="userParams.orderBy"
+          btnRadio="created"
+        >Newest Members</button>
+      </div>
+    </div>
   </form>
 </div>
 
