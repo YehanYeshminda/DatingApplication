@@ -48,7 +48,7 @@ export class MembersService {
     this.userParams = params;
   }
 
-  resetUserParams(){
+  resetUserParams() {
     if (this.user) {
       this.userParams = new UserParams(this.user);
       return this.userParams;
@@ -109,6 +109,14 @@ export class MembersService {
 
   deletePhoto(photoId: number) {
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
+  }
+
+  addLike(username: string) {
+    return this.http.post(this.baseUrl + 'likes/' + username, {});
+  }
+
+  getLikes(predicate: string) {
+    return this.http.get(this.baseUrl + 'likes?predicate=' + predicate);
   }
 
   private getPaginatedResult<T>(url: string, params: HttpParams) {
