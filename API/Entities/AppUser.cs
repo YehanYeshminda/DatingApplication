@@ -19,10 +19,8 @@ namespace API.Entities
         public string Interests { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
-        public ICollection<Photo> Photos { get; set; } // 1 user will have many photos
-        // public int GetAge()
-        // {
-        //     return DateOfBirth.CalculateAge();
-        // }
+        public List<Photo> Photos { get; set; } = new(); // 1 user will have many photos
+        public List<UserLike> LikedByUsers { get; set; } // many users will have many likebyusers
+        public List<UserLike> LikedUsers { get; set; } // many users will have many liked users
     }
 }

@@ -27,14 +27,6 @@ namespace API.Data
             .SingleOrDefaultAsync(); // the query more efficient
         }
 
-        // without using pagignation use this
-        // public async Task<IEnumerable<MemberDto>> GetMembersAsync()
-        // {
-        //     return await _context.Users
-        //     .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-        //     .ToListAsync();
-        // }
-
         // with using pagination use this
         public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
