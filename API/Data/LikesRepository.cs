@@ -47,7 +47,7 @@ namespace API.Data
             }).ToListAsync();
         }
 
-        public async Task<AppUser> GetUserLikesWithLikes(int userId)
+        public async Task<AppUser> GetUserWithLikes(int userId)
         {
             return await _context.Users.Include(x => x.LikedUsers).FirstOrDefaultAsync(x => x.Id == userId);
         }
