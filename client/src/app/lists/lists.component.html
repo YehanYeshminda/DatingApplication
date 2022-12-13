@@ -31,4 +31,20 @@
     <div class="col-2" *ngFor="let member of members">
       <app-member-card [memberInformation]="member"></app-member-card>
   </div>
+
+  <!-- pagination component -->
+  <div class="d-flex justify-content-center" *ngIf="pagination">
+    <pagination
+      [boundaryLinks]="true"
+      [totalItems]="pagination.totalItems"
+      [itemsPerPage]="pagination.itemsPerPage"
+      [(ngModel)]="pagination.currentPage"
+      (pageChanged)="pageChanged($event)"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;"
+    >
+    </pagination>
 </div>
+
