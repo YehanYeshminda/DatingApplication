@@ -1,4 +1,6 @@
 using API.Data;
+using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API
@@ -15,8 +17,9 @@ namespace API
             try
             {
                 var context = services.GetRequiredService<DataContext>();
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
                 await context.Database.MigrateAsync(); // will create the migrations
-                await Seed.SeedUsers(context);
+                await Seed.SeedUsers(userManager); // this is used to seed the data
             }
             catch (Exception ex)
             {
