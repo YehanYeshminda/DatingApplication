@@ -1,14 +1,11 @@
 using API.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Entities
 {
     // this method is good for the use of entity framework
-    public class AppUser
+    public class AppUser : IdentityUser<int>
     {
-        public int Id { get; set; } // this is used as the primary key
-        public string UserName { get; set; } // this is used as the username
-        public byte[] PasswordHash { get; set; } // in order to add more security to the database
-        public byte[] PasswordSalt { get; set; } // in order to add more security to the database
         public DateTime DateOfBirth { get; set; } = DateTime.Now;
         public string KnownAs { get; set; }
         public DateTime Created { get; set; }
@@ -25,6 +22,7 @@ namespace API.Entities
 
         public List<Message> MessagesSent { get; set; } // many users will have many messages sent
         public List<Message> MessagesReceived { get; set; } // many users will have many messages received
+        public ICollection<AppUserRole> UserRoles { get; set; }
         
     }
 }

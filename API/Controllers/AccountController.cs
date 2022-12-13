@@ -28,13 +28,9 @@ namespace API.Controllers
         {
             if (await UserExists(registerDto.Username)) return BadRequest("Username is already taken"); // this will be a 400 request 
 
-
             var user = _mapper.Map<AppUser>(registerDto);
-            using var hmac = new HMACSHA512(); // provides with the hashing algorithm and will be disposed of correctly
 
             user.UserName = registerDto.Username.ToLower();
-            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)); // used in order to pass the password as a byte array
-            user.PasswordSalt = hmac.Key;
     
             _context.Users.Add(user);
             await _context.SaveChangesAsync(); // saving the users into the data table inside of the database
@@ -57,16 +53,6 @@ namespace API.Controllers
                                            .SingleOrDefaultAsync(x => x.UserName == loginDto.Username); // getting the user
 
             if (user == null) return Unauthorized("Invalid username");
-
-            using var hmac = new HMACSHA512(user.PasswordSalt); // we create encryption for the user password salt since this will give the same salt
-
-            var computerHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
-
-            for (int i = 0; i < computerHash.Length; i++)
-            {
-                // checking if the password is valid
-                if (computerHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password"); // returns 401 bad request
-            }
 
             // in order to send the information back as a token service
             return new UserDto
