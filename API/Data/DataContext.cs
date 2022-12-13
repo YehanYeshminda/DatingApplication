@@ -12,6 +12,7 @@ namespace API.Data
         // in order to create a new entity
         public DbSet<AppUser> Users { get; set; }
         public DbSet<UserLike> Likes { get; set; }
+        public DbSet<Message> Messages { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -30,6 +31,19 @@ namespace API.Data
                 .WithMany(l => l.LikedByUsers)
                 .HasForeignKey(k => k.TargetUserId)
                 .OnDelete(DeleteBehavior.NoAction); // no action is to be only given in SQL server no cancade can be given in this as well in other databases
+
+
+            // has one recipient with many messages recieved
+            builder.Entity<Message>()
+                .HasOne(u => u.Recipient)
+                .WithMany(m => m.MessagesReceived)
+                .OnDelete(DeleteBehavior.Restrict); // when a user is deleted the message will not be deleted
+
+            // one sender with many messages sent
+            builder.Entity<Message>()
+                .HasOne(u => u.Sender)
+                .WithMany(m => m.MessagesSent)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
