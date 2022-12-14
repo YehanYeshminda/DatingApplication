@@ -26,6 +26,7 @@ namespace API.Controllers
             _userRepository = userRepository;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet] // returns all the users as a paused method which is task
         public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
         {
@@ -54,6 +55,7 @@ namespace API.Controllers
         //     return Ok(await _userRepository.GetMembersAsync());
         // }
 
+        [Authorize(Roles = "Member")]
         [HttpGet("{username}")] // returns a user using a id  as a paused method which is task
         public async Task<ActionResult<MemberDto>> GetUserByUsername(string username)
         {
