@@ -5,6 +5,7 @@ using API.DTOs;
 using API.Entities;
 using API.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,15 +13,15 @@ namespace API.Controllers
 {
     public class AccountController : BaseApiController
     {
-        private readonly DataContext _context;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userManager;
 
-        public AccountController(DataContext context, ITokenService tokenService, IMapper mapper)
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IMapper mapper)
         {
+            _userManager = userManager;
             _mapper = mapper; // in order to use the auto mapper
             _tokenService = tokenService; // in order to use the token service
-            _context = context; // in order to use the context we should always initialize
         }
 
         [HttpPost("register")] // this automatically binds to the parameters
@@ -31,9 +32,10 @@ namespace API.Controllers
             var user = _mapper.Map<AppUser>(registerDto);
 
             user.UserName = registerDto.Username.ToLower();
-    
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync(); // saving the users into the data table inside of the database
+
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            if (!result.Succeeded) return BadRequest(result.Errors);
 
             // in order to send the information back as a token service
             return new UserDto
@@ -49,10 +51,14 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             // we could use firstOrDefault as well
-            var user = await _context.Users.Include(p => p.Photos)
+            var user = await _userManager.Users.Include(p => p.Photos)
                                            .SingleOrDefaultAsync(x => x.UserName == loginDto.Username); // getting the user
 
             if (user == null) return Unauthorized("Invalid username");
+
+            var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+
+            if (!result) return Unauthorized("Invalid Password");
 
             // in order to send the information back as a token service
             return new UserDto
@@ -69,7 +75,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<bool> UserExists(string username)
         {
-            return await _context.Users.AnyAsync(x => x.UserName == username.ToLower()); // checking if any username matches the username passed
+            return await _userManager.Users.AnyAsync(x => x.UserName == username.ToLower()); // checking if any username matches the username passed
         }
     }
 }
