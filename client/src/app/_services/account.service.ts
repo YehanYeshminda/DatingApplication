@@ -37,7 +37,6 @@ export class AccountService {
         if (user){
           this.setCurrentUser(user);
         }
-
         // return user;         // we could return user from the register if we wanted to
       })
     )
@@ -45,6 +44,9 @@ export class AccountService {
 
   // method used to set the current user
   setCurrentUser(user: User){
+    user.roles = [];
+    const roles = this.getDecodedToken(user.token).role; // getting the role using the claims
+    Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
   }
@@ -52,5 +54,9 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null); // removing the user
+  }
+
+  getDecodedToken(token:String){
+    return JSON.parse(atob(token.split(".")[1]));
   }
 }
