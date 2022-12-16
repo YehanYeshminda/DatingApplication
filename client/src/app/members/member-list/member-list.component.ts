@@ -20,13 +20,13 @@ export class MemberListComponent implements OnInit {
     { value: 'male', display: 'Males' },
     { value: 'female', display: 'Female' },
   ];
+  
 
   constructor(private memberService: MembersService) {
     this.userParams = this.memberService.getUserParams();
   }
 
   ngOnInit(): void {
-    // this.members$ = this.memberService.getMembers();
     this.loadMembers();
   }
 

@@ -1,13 +1,15 @@
-import { Photo } from './../../_models/Photo';
+import { Message } from './../../_models/Message';
+import { MessagesService } from 'src/app/_services/messages.service';
 import { MembersService } from './../../_services/members.service';
 import { Member } from './../../_models/Member';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   NgxGalleryAnimation,
   NgxGalleryImage,
   NgxGalleryOptions,
 } from '@kolkov/ngx-gallery';
+import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
 
 @Component({
   selector: 'app-member-detail',
@@ -18,11 +20,15 @@ export class MemberDetailComponent implements OnInit {
   member: Member | undefined; // can also be undefined
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
+  @ViewChild('memberTabs') memberTabs?: TabsetComponent;
+  activeTab?: TabDirective;
+  messages: Message[] = [];
 
   // when a user clicks on a route they will then click on the current route
   constructor(
     private memberService: MembersService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private messageService: MessagesService
   ) {}
 
   ngOnInit(): void {
@@ -68,5 +74,21 @@ export class MemberDetailComponent implements OnInit {
         this.galleryImages = this.getImages();
       },
     });
+  }
+
+  onTabActivated(data: TabDirective) {
+    this.activeTab = data;
+
+    if (this.activeTab.heading === 'Messages') {
+      this.loadMessages();
+    }
+  }
+
+  loadMessages() {
+    if (this.member) {
+      this.messageService.getMessageThread(this.member.userName).subscribe({
+        next: (message) => (this.messages = message),
+      });
+    }
   }
 }

@@ -9,20 +9,11 @@ import { MessagesService } from 'src/app/_services/messages.service';
 })
 export class MemberMessagesComponent implements OnInit {
   @Input() username?: string;
-  messages: Message[] = [];
+  @Input() messages: Message[] = [];
 
   constructor(private messageService: MessagesService) { }
 
   ngOnInit(): void {
-    this.loadMessages()
-  }
-
-  loadMessages(){
-    if (this.username){
-      this.messageService.getMessageThread(this.username).subscribe({
-        next : (message) => this.messages = message
-      })
-    }
   }
 
 }
