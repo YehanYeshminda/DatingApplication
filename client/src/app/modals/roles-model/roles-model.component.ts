@@ -8,13 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RolesModelComponent implements OnInit {
 
-  title = "";
-  list: any;
-  closeBtnName = "";
+  username = "";
+  availableRoles: any[] = [];
+  selectedRoles: any[] = [];
 
   constructor(public bsModalRef:BsModalRef) { }
 
   ngOnInit(): void {
+  }
+
+  // used to update the values whether a checkbox is checked or not checked
+  updateChecked(checkedValue: string){
+    const index = this.selectedRoles.indexOf(checkedValue);
+    index !== -1 ? this.selectedRoles.splice(index, 1) : this.selectedRoles.push(checkedValue);
   }
 
 }

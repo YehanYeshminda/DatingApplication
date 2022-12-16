@@ -7,39 +7,53 @@ import { RolesModelComponent } from 'src/app/modals/roles-model/roles-model.comp
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
-  styleUrls: ['./user-management.component.css']
+  styleUrls: ['./user-management.component.css'],
 })
 export class UserManagementComponent implements OnInit {
   users: User[] = [];
-  bsModelRef: BsModalRef<RolesModelComponent> = new BsModalRef<RolesModelComponent>();
+  bsModelRef: BsModalRef<RolesModelComponent> =
+    new BsModalRef<RolesModelComponent>();
+  availableRoles = ['Admin', 'Moderator', 'Member'];
 
-  constructor(private adminService: AdminService, private modelService: BsModalService) { }
+  constructor(
+    private adminService: AdminService,
+    private modalService: BsModalService
+  ) {}
 
   ngOnInit(): void {
     this.getUsersWithRoles();
   }
 
-  getUsersWithRoles(){
+  getUsersWithRoles() {
     this.adminService.getUsersWithRoles().subscribe({
-      next : (users) => this.users = users
+      next: (users) => (this.users = users),
+    });
+  }
+
+  openRolesModal(user: User) {
+    const config = {
+      class: 'modal-dialog-centered',
+      initialState: {
+        username: user.username,
+        availableRoles: this.availableRoles,
+        selectedRoles: [...user.roles]
+      }
+    }
+
+    this.bsModelRef = this.modalService.show(RolesModelComponent, config);
+    this.bsModelRef.onHide?.subscribe({
+      next: () => {
+        const selectedRoles = this.bsModelRef.content?.selectedRoles;
+        if (!this.arrayEqaul(selectedRoles, user.roles)) {
+          this.adminService.updateUserRoles(user.username, selectedRoles).subscribe({
+            next: (roles) => user.roles = roles
+          })
+        }
+      }
     })
   }
 
-  // in order to show the roles model component
-  openRolesModel(){
-    const initialState: ModalOptions = {
-      initialState: {
-        list: [
-          'Do thing',
-          'thing',
-          'Do thing',
-          'Do thing'
-        ],
-        title: "test modal"
-      }
-    }
-    this.bsModelRef = this.modelService.show(RolesModelComponent, initialState);
-    this.bsModelRef.content!.closeBtnName = "Close";
+  private arrayEqaul(arr1: any[], arr2: any[]) {
+    return JSON.stringify(arr1.sort()) === JSON.stringify(arr2.sort());
   }
-
 }
