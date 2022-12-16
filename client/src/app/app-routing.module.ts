@@ -13,6 +13,7 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { AdminGuard } from './_guards/admin.guard';
+import { MessageDetailedResolver } from './_resolvers/message-detailed.resolver';
 
 // in order to enable routing inside of the angular application
 const routes: Routes = [
@@ -25,11 +26,23 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       // in order to apply 1 route guard to many paths
-      { path: 'members/:username', component: MemberDetailComponent },
-      { path: 'member/:edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangesGuard] },
+      {
+        path: 'members/:username',
+        component: MemberDetailComponent,
+        resolve: { member: MessageDetailedResolver },
+      },
+      {
+        path: 'member/:edit',
+        component: MemberEditComponent,
+        canDeactivate: [PreventUnsavedChangesGuard],
+      },
       { path: 'lists', component: ListsComponent },
       { path: 'messages', component: MessagesComponent },
-      { path: 'admin', component: AdminPanelComponent, canActivate: [AdminGuard] },
+      {
+        path: 'admin',
+        component: AdminPanelComponent,
+        canActivate: [AdminGuard],
+      },
     ],
   },
   { path: 'not-found', component: NotFoundComponent },

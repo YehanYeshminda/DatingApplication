@@ -17,10 +17,10 @@ import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
   styleUrls: ['./member-detail.component.css'],
 })
 export class MemberDetailComponent implements OnInit {
-  member: Member | undefined; // can also be undefined
+  member: Member = {} as Member; // can also be undefined
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
-  @ViewChild('memberTabs') memberTabs?: TabsetComponent;
+  @ViewChild('memberTabs', { static: true }) memberTabs?: TabsetComponent;
   activeTab?: TabDirective;
   messages: Message[] = [];
 
@@ -32,7 +32,15 @@ export class MemberDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadMember();
+    this.route.data.subscribe({
+      next: data => this.member = data['member']
+    })
+
+    this.route.queryParams.subscribe({
+      next: (params) => {
+        params['tab'] && this.selectTab(params['tab']);
+      },
+    });
 
     this.galleryOptions = [
       {
@@ -44,13 +52,13 @@ export class MemberDetailComponent implements OnInit {
         preview: false,
       },
     ];
+
+    this.galleryImages = this.getImages();
   }
 
   getImages() {
     if (!this.member) return [];
-
     const imageUrls = [];
-
     for (const photo of this.member.photos) {
       imageUrls.push({
         small: photo.url,
@@ -58,27 +66,11 @@ export class MemberDetailComponent implements OnInit {
         big: photo.url,
       });
     }
-
     return imageUrls;
-  }
-
-  loadMember() {
-    // getting the username from the parameters
-    const username = this.route.snapshot.paramMap.get('username');
-
-    if (!username) return; // will stop the execution of the method
-
-    this.memberService.getMember(username).subscribe({
-      next: (member) => {
-        this.member = member;
-        this.galleryImages = this.getImages();
-      },
-    });
   }
 
   onTabActivated(data: TabDirective) {
     this.activeTab = data;
-
     if (this.activeTab.heading === 'Messages') {
       this.loadMessages();
     }
@@ -92,9 +84,9 @@ export class MemberDetailComponent implements OnInit {
     }
   }
 
-  selectTab(heading: string){
+  selectTab(heading: string) {
     if (this.memberTabs) {
-      this.memberTabs.tabs.find(x => x.heading === heading)!.active = true;
+      this.memberTabs.tabs.find((x) => x.heading === heading)!.active = true;
     }
   }
 }
