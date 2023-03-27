@@ -15,13 +15,13 @@ export class AccountService {
 
   login(model: any) {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
-      map((res: User) => {
+      map((res) => {
         const user = res;
-
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));
           this.currentUserSource.next(user);
         }
+        return user;
       })
     );
   }
