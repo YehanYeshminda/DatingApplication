@@ -21,11 +21,17 @@
           >
         </li>
       </ng-container>
+
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/errors" routerLinkActive="active"
+          >Errors</a
+        >
+      </li>
     </ul>
 
     <div class="dropdown" *ngIf="currentUser$ | async" dropdown>
       <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle
-        >Welcome {{ (currentUser$ | async)?.userName }}</a
+        >Welcome {{ (currentUser$ | async)?.userName | titlecase }}</a
       >
       <div class="dropdown-menu" *dropdownMenu style="margin-top: 10px">
         <a class="dropdown-item"> Edit Profile </a>
