@@ -25,7 +25,7 @@ const routes: Routes = [
         component: MemberListComponent, // this is used to implement a route guard so that when a user is not logged they are not able to access the window
       },
       {
-        path: 'members/:id',
+        path: 'members/:username',
         component: MemberDetailComponent,
       },
       {
