@@ -30,6 +30,7 @@
     </ul>
 
     <div class="dropdown" *ngIf="currentUser$ | async" dropdown>
+      <img [src]="(currentUser$ | async)?.photoUrl" alt="user photo" />
       <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle
         >Welcome {{ (currentUser$ | async)?.userName | titlecase }}</a
       >
