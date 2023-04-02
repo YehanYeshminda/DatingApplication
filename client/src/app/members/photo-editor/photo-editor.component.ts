@@ -5,7 +5,6 @@ import { Member } from 'src/app/models/member';
 import { User } from 'src/app/models/users';
 import { AccountService } from 'src/app/services/account.service';
 import { environment } from 'src/environments/environment';
-import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { Photo } from 'src/app/models/photo';
 import { MembersService } from 'src/app/services/members.service';
 
@@ -87,6 +86,13 @@ export class PhotoEditorComponent implements OnInit {
       if (response) {
         const photo = JSON.parse(response);
         this.member?.photos.push(photo);
+
+        // if this is all true then set the main, user and member properties
+        if (photo.isMain && this.user && this.member) {
+          this.user.photoUrl = photo.url;
+          this.member.photoUrl = photo.url;
+          this.accountService.setCurrentUser(this.user);
+        }
       }
     };
   }
