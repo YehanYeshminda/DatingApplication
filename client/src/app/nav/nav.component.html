@@ -24,6 +24,15 @@
             >Messages</a
           >
         </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/admin"
+            routerLinkActive="active"
+            *appHasRole="['Admin', 'Moderator']"
+            >Admin Controls</a
+          >
+        </li>
       </ng-container>
 
       <li class="nav-item">
@@ -34,7 +43,10 @@
     </ul>
 
     <div class="dropdown" *ngIf="currentUser$ | async" dropdown>
-      <img [src]="(currentUser$ | async)?.photoUrl" alt="user photo" />
+      <img
+        [src]="(currentUser$ | async)?.photoUrl || './assets/user.png'"
+        alt="user photo"
+      />
       <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle
         >Welcome {{ (currentUser$ | async)?.knownAs | titlecase }}</a
       >

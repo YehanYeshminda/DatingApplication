@@ -20,6 +20,8 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup = new FormGroup({});
   maxDate: Date = new Date();
   validationErrors: string[] | undefined;
+  passwordPattern =
+    /^(?=.*[!@#$%^&*()_+=[\]{};':"\\|,.<>/?])(?=.*\d)(?=.*[A-Z]).+$/;
 
   constructor(
     private accountService: AccountService,
@@ -42,7 +44,12 @@ export class RegisterComponent implements OnInit {
       country: ['', [Validators.required]],
       password: [
         '',
-        [Validators.required, Validators.minLength(4), Validators.maxLength(8)],
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(8),
+          Validators.pattern(this.passwordPattern),
+        ],
       ],
       confirmPassword: [
         '',
