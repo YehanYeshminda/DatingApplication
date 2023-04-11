@@ -13,11 +13,11 @@ namespace API.Helpers
             if (!resultContext.HttpContext.User.Identity.IsAuthenticated) return; // if not authonticated we just return
 
             var userId = resultContext.HttpContext.User.GetUserId();
-            var repo = resultContext.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-            var user = await repo.GetUserByIdAsync(userId);
+            var unitOfWork = resultContext.HttpContext.RequestServices.GetRequiredService<IUnitOfWork>();
+            var user = await unitOfWork.userRepository.GetUserByIdAsync(userId);
 
             user.LastActive = DateTime.UtcNow;
-            await repo.SaveAllAsync();
+            await unitOfWork.Complete();
         }
     }
 }
