@@ -1,4 +1,4 @@
-# fly.toml file generated for yehandatingapp on 2023-04-12T02:48:18+04:00
+# fly.toml file generated for yehandatingapp on 2023-04-12T03:43:34+04:00
 
 app = "yehandatingapp"
 kill_signal = "SIGINT"
