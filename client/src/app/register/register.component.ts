@@ -9,6 +9,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -26,7 +27,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     private toastr: ToastrService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -80,15 +82,10 @@ export class RegisterComponent implements OnInit {
 
     this.accountService.register(values).subscribe({
       next: (response) => {
-        // console.log(response); this reponse contains the user
-        this.toastr.success(
-          response.userName + ' has been registered!',
-          'Registered!'
-        );
         this.cancel();
       },
       error: (err) => {
-        this.validationErrors = err;
+        this.router.navigateByUrl('/');
       },
     });
   }
